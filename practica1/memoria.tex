@@ -157,7 +157,7 @@ Ejecutando los programas sobre un entorno controlado con \texttt{gdb} hemos dete
 \begin{center}
     \begin{lstlisting}[caption=comandos para la obtención de contraseña en gdb]
         gdb level1                  # ejecución en entorno gdb
-        (gdb) break decode_password # breakpoint en el valo
+        (gdb) break decode_password # breakpoint
         (gdb) run                   # ejecución hasta la rutina
         (gdb) x/s $rdi              # contraseña cifrada
         (gdb) finish                # salto a la instruccion ret
