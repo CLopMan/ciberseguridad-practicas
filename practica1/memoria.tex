@@ -7,25 +7,26 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{float}
-\usepackage{minted}
 
 \definecolor{miverde}{rgb}{0,0.6,0}
 
 % style for listings (código)
-\lstdefinestyle{mystyle} {
-    stringstyle=\color{miverde},
-    breaklines=true,
-    breakatwhitespace=false,
-    captionpos=b,
-    keepspaces=true,
-    numbers=none,
-    numbersep=5pt,
-    showspaces=false,
-    showstringspaces=false,
-    showtabs=false,
-    tabsize=2
+\lstdefinestyle{python}{
+    language=Python,
+    backgroundcolor=\color{gray!2},     % Color de fondo
+    basicstyle=\ttfamily,               % Tipo y tamaño de fuente
+    keywordstyle=\color{blue}\bfseries, % Color para palabras clave
+    stringstyle=\color{miverde},        % Color para cadenas
+    commentstyle=\color{red},           % Color para comentarios
+    showspaces=false,                   % No mostrar espacios
+    showstringspaces=false,             % No mostrar espacios en las cadenas
+    frame=single,                       % Poner un marco alrededor del código
+    breaklines=true,                    % Romper las líneas largas
+    captionpos=b,                       % Posición del caption
+    tabsize=4,                          % Tamaño de las tabulaciones
+    escapeinside={\%*}{*)},             % Para incluir código LaTeX en los listings
+    morekeywords={self}                 % Palabras clave adicionales
 }
-\lstset{style=mystyle}
 \lstset{basicstyle=\ttfamily}
 
 %title
@@ -86,7 +87,8 @@ Para extraer las contraseñas de los ejecutables se han empleado 2 estrategias d
 
 Para generar la \textit{wordlist} se ha empleado el siguiente código de \textit{python}:
 
-\begin{minted}{python}
+\lstset{style=python}
+\begin{lstlisting}
 import itertools
 
 # charset level 1
@@ -122,16 +124,16 @@ with open("level3_wordlist.txt", "w+") as file:
     for p in permutations:
         file.write(''.join(p) + "\n")
 
-\end{minted}
+\end{lstlisting}
 
-Sin embargo, no ha sido posible generar la \textit{wordlist} para \textit{level3}  debido gran número de contraseñas posibles.
+Sin embargo, no ha sido posible generar la \textit{wordlist} para \textit{level3} debido gran número de contraseñas posibles y, consecuentemente, al gran tamaño del archivo.
 
-Gracias a estas \textit{wordlist} hemos podido extraer las contraseñas para los archivos \textit{level1} y \textit{level2}. En la siguiente tabla se recogen los tiempos que ha llevado obtener cada contraseña: 
+Usando este método, hemos podido extraer las contraseñas para los archivos \textit{level1} y \textit{level2}. En la siguiente tabla se recogen los tiempos que ha llevado obtener cada contraseña: 
 \begin{table}
 \begin{centering}
     \begin{tabular}{|c|c|c|}
         \hline
-        Archivo & Longitud de la \textit{wordlist} & Tiempo\\
+        Archivo & Longitud de la \textit{wordlist} en líneas & Tiempo\\
         \hline
         level1 & 524160 & 53s\\ 
         level2 & 8910720 & 383s\\
@@ -156,12 +158,12 @@ Ejecutando los programas sobre un entorno controlado con \texttt{gdb} hemos dete
 
 \begin{center}
     \begin{lstlisting}[caption=comandos para la obtención de contraseña en gdb]
-        gdb level1                  # ejecución en entorno gdb
-        (gdb) break decode_password # breakpoint
-        (gdb) run                   # ejecución hasta la rutina
-        (gdb) x/s $rdi              # contraseña cifrada
-        (gdb) finish                # salto a la instruccion ret
-        (gdb) x/s $rdi              # obtener contraseña en claro
+gdb level1                  # ejecucion en entorno gdb
+(gdb) break decode_password # breakpoint
+(gdb) run                   # ejecucion hasta la rutina
+(gdb) x/s $rdi              # contrasena cifrada
+(gdb) finish                # salto a la instruccion ret
+(gdb) x/s $rdi              # obtener contrasenia en claro
 \end{lstlisting}
 \end{center}
 
@@ -174,7 +176,7 @@ Adicionalmente se ha decompilado el programa usando \texttt{Ghidra} con el fin d
 
 \section{ACL's}
 \label{sec:acl}
-
+Como se especifica en la práctica, la máquina virtual cuenta con 3 ficheros que el usuario \textit{rover} no tiene permiso para leer. Es por ello que, analizando la lista de ACL's de los siguientes ficheros, podemos ver quién tiene permisos para leer.
 \section{Conclusión}
 \label{sec:conclusion}
 
