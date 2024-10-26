@@ -44,6 +44,13 @@
     morekeywords={self}                 % Palabras clave adicionales
 }
 \lstset{basicstyle=\ttfamily}
+\hypersetup{
+    colorlinks=true, % Activa el color en los enlaces
+    linkcolor=blue,  % Color de los enlaces internos (como secciones)
+    urlcolor=blue,   % Color de los enlaces a URLs
+}
+
+
 %title
 \title{Práctica 1} 
 
@@ -74,15 +81,15 @@
     \vspace{0.5cm}
 
    
-    \textbf{Prof .}Antonio Nappa\\
+    \textbf{Prof.} Antonio Nappa\\
     
     \textbf{Grupo: } 81   
     
 \end{titlepage}
 \newpage
 
-\renewcommand{\contentsname}{\centering Índice}
-\tableofcontents
+%\renewcommand{\contentsname}{\centering Índice}
+%\tableofcontents
 
 \newpage
 
@@ -93,12 +100,12 @@ En este documento se recoge el proceso de desarrollo de la primera práctica de 
 \section{Estrategias para el descubrimiento de contraseñas}
 \label{sec:password}
 
-Para extraer las contraseñas de los ejecutables se han empleado 2 estrategias distintas: uso de john the ripper para la obtención de contraseñas y ataque sobre los binarios.
+Para extraer las contraseñas de los ejecutables se han empleado 2 estrategias distintas: uso de \href{https://www.openwall.com/john/}{\textit{John the Ripper}} para la obtención de contraseñas y ataque sobre los binarios.
 
 \subsection{John The Ripper}
 \label{sec:john}
 
-\texttt{John} es una herramienta para la optención de contraseñas débiles a partir de su \textit{hash}. Dado el conocimiento que teníamos de las contraseñas hemos generado una \textit{wordlist} con todas las contraseñas posibles con el alfabeto proporcionado. Esto se reduce a las permutaciones de 5, 6 y 8 elementos de los conjuntos de caracteres usados para generar cada contraseña. 
+\texttt{John} es una herramienta para la obtención de contraseñas débiles a partir de su \textit{hash}. Dado el conocimiento que teníamos de las contraseñas hemos generado una \textit{wordlist} con todas las contraseñas posibles con el alfabeto proporcionado. Esto se reduce a las permutaciones de 5, 6 y 8 elementos de los conjuntos de caracteres usados para generar cada contraseña. De esta forma hemos podido realizar un ataque de diccionario sobre las contraseñas de los 3 archivos. 
 
 Para generar la \textit{wordlist} se ha empleado el siguiente código de \textit{python}:
 
@@ -144,7 +151,7 @@ with open("level3_wordlist.txt", "w+") as file:
 Sin embargo, no ha sido posible generar la \textit{wordlist} para \textit{level3} debido gran número de contraseñas posibles y, consecuentemente, al gran tamaño del archivo.
 
 Usando este método, hemos podido extraer las contraseñas para los archivos \textit{level1} y \textit{level2}. En la siguiente tabla se recogen los tiempos que ha llevado obtener cada contraseña: 
-\begin{table}
+\begin{table}[H]
 \begin{centering}
     \begin{tabular}{|c|c|c|}
         \hline
@@ -167,7 +174,7 @@ Hemos empleado 3 herramientas distintas para el análisis y la explotación de b
 
 \begin{center}\texttt{objdump -D level1 level2 level3}\end{center}
 
-Con esto hemos podido analizar el código ensamblador y descubrir que la función \texttt{decode\_password} recibe un \textit{string} y, a través de una serie de operaciones, la transforma in-situ.
+Con esto, hemos podido analizar el código ensamblador y descubrir que la función \texttt{decode\_password} recibe un \textit{string} y, a través de una serie de operaciones, lo transforma in-situ.
 
 Ejecutando los programas sobre un entorno controlado con \texttt{gdb} hemos detenido la ejecución al final de la subrutina \texttt{decode\_password} y leído el valor de la cadena de texto en memoria:
 
@@ -194,17 +201,17 @@ Adicionalmente se ha decompilado el programa usando \texttt{Ghidra} con el fin d
 
 \subsection{Comparación de métodos}
 \label{subsec:comparacion}
-Ambos métodos, \textit{John} y la explotació nde binarios, son estrategias completamente distintas con sus ventajas y desventajas.
+Ambos métodos, \textit{John} y la explotación de binarios, son estrategias completamente distintas con sus ventajas y desventajas.
 
 El uso de \textit{John} requiere el conocimiento del hash de la contraseña e, idealmente, algo de contexto sobre la misma para poder limitar el espacio de búsqueda. Sin embargo, dada la naturaleza del ataque, tiene un coste de computación que crece exponencialmente; llegando a tiempos de ejecución extremenadamente largos para contraseñas de media longitud (como es el caso de de la tercera contraseña).
 
 La explotación de binarios, en contraste, tiene un coste de ejecución bajo. No obstante, require de conocimiento de la arquitectura para la que se ha compilado el archivo y, evidentemente, de acceso al propio archivo. Si un atacante tiene acceso a un binario suele significar que ha conseguido corromper una parte crítica del sistema.
 
-Con todo lo anterior concluímos que un ataque basado en fuerza bruta, como es el caso de \textit{John}, requiere un menor coste en conocimiento sobre la contraseña y objetivo del ataque; a cambio de un mayor coste computacional. Por otro lado, la explotación de binarios necesita del acceso al archivo en un entorno controlado y un mayor conocimiento sobre programación a bajo nivel y arquitecturas del sistema atacado.
+Con todo lo anterior concluímos que un ataque basado en fuerza bruta, como es el caso de \textit{John}, requiere un menor coste en conocimiento sobre la contraseña y objetivo del ataque; a cambio de un mayor coste computacional. Por otro lado, la explotación de binarios necesita del acceso al archivo en un entorno controlado y un mayor conocimiento sobre programación a bajo nivel y la arquitectura del sistema atacado.
 
 \section{ACL's}
 \label{sec:acl}
-Como se especifica en la práctica, la máquina virtual cuenta con 3 ficheros que el usuario \textit{rover} no tiene permiso para leer. Es por ello que, analizando la lista de ACL's de los siguientes ficheros, podemos ver quién tiene permisos para leer.
+Como se especifica en la práctica, la máquina virtual cuenta con 3 ficheros que el usuario \textit{rover} no tiene permiso para leer. Es por ello que, analizando la lista de ACL's de los siguientes ficheros, podemos ver quién tiene los permisos adecuados.
 
 \vspace{0.5cm}
 
