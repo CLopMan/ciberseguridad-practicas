@@ -249,7 +249,8 @@ print(new_flag)
 
 El resultado obtenido ha sido el siguiente:
 \texttt{8332767247cafebb112f7d569af92426}. Este resultado si ha sido aceptado
-como correcto.
+como correcto. La semilla empleada en la generación de las \textit{flags} es
+\texttt{cafebb}.
 
 A modo de curiosidad, dado que el cifrado de rotación es modular, la semilla se
 mostrará en claro para una rotación igual al periodo. Es por esto que se puede
@@ -268,5 +269,11 @@ apreciar la semilla en las flags con rotación 6:
 
 \section{Conclusión}
 \label{sec:conclusion}
+El análisis de tráfico de red es una de las principales actividades relacionadas con la ciberseguridad. La importancia de unas comunicaciones seguras a través de la red es vital no sólo para la protección de información crítica, sino también para el respecto de los derechos a la privacidad de los usuarios. Esta práctica nos ha permitido explorar el análisis e intercepción de tráfico web y familiarizarnos con herramientas como \texttt{mitmproxy}.
+
+Trabajar con dos clases de \textit{flags} nos ha permitido experimentar como un cifrado algo más complejo multiplica en gran medida el esfuerzo necesario para la vulneración de la confidencialidad de un mensaje. Las flags de tipo 2 han requerido un esfuerzo mucho mayor para descubrir su descifrado. Al igual que vimos en cursos pasados, es importante que los algoritmos criptográficos reduzcan al máximo la información contenida en un mensaje cifrado para impedir el reconocimiento de patrones que le permitan al atacante descubrir su contenido. Sin embargo, en ambos tipos de \textit{flags} ha sido posible obtener información sobre el cifrado a través del análisis de distintas ocurrencias.
+
+Para solucionar las vulnerabilidades existentes en el contexto de la práctica es necesario evitar el uso de marcadores como \texttt{--ssl-insecure} o \texttt{--proxy-insecure} que permiten la comunicación con proxys no autenticados. Adicionalmente, se sugiere usar algoritmos de cifrado probados y estándar como AES256.
+
 
 \end{document}
