@@ -19,7 +19,7 @@
   comment=[l]{//},
   morecomment=[s]{/*}{*/},
   commentstyle=\color{red}\ttfamily,
-  stringstyle=\color{miverde}\ttfamily,
+  stringstyle=\ttfamily,
   morestring=[b]',
   morestring=[b]"
 }
@@ -202,7 +202,7 @@ las flags.
 4745131622dbafcc09340e7b0af6885f
 \end{lstlisting}
 
-Primeramente se trató de desencriptar las \textit{flags} rotando en ambos sentidos los valores hexadecimales de cada caracter. No obstante, esto no dio resultado. Adicionalmente, se probaron otras codificaciones como \texttt{ascii}.
+Primeramente se trató de desencriptar las \textit{flags} rotando en ambos sentidos los valores hexadecimales de cada caracter. No obstante, esto no dio resultado. Adicionalmente, se probaron otras codificaciones como \texttt{ASCII}.
 
 Posteriormente se observó que las flags con una diferencia de 6 rotaciones mantenían la misma semilla. Dado que la semilla está formada enteramente por letras y que la codificación hexadecimal cuenta con 6 caracteres alfabéticos, esto sugiere que el cifrado se ha aplicado por separado a letras y números.
 
@@ -266,6 +266,65 @@ apreciar la semilla en las flags con rotación 6:
 
 \section{Descubrimiento de una flag tipo 2}
 \label{sec:tipo2}
+
+Las \textit{flags} de tipo 2 cuentan con un cifrado más complejo que requiere de varios pasos para su descrubrimiento. Los paquetes cuentan con 3 argumentos (\textit{Rotation, op} y \textit{s}) y una cadena de caracteres codificada en base 64.
+
+
+\begin{lstlisting}[language=flag, caption=Ejemplo de flag tipo 2]
+Hexadecimal Flag (Rotation: 15, s:1c7767, op:x): b'BlAEAAAGBVUHDlBTUgFNTQEEAwIAUwYHAQVVBlcDAFc='
+\end{lstlisting}
+
+Los argumentos se han interpretado de la siguiente forma:
+\begin{itemize}
+    \item \textbf{Rotation}: al igual que en las flags de tipo 1, se asume que indica la rotación en uno o varios diccionarios de caracteres.
+    \item \textbf{s}: se interpreta como una semilla o contraseña usada en el cifrado.
+    \item \textbf{op}: se interpreta como la operación usada en el cifrado.
+    Dado que tiene un valor constante \texttt{x}, se asume que se trata de una operación \texttt{XOR} con la semilla, de forma similar a un \textit{cifrado Vernam}. 
+\end{itemize}
+
+Para descubrir la \textit{flag} se han seguido los pasos detallados a continuación.
+
+\subsection{Exploración de la máquina y conversión a hexadecimal}
+
+Al explorar la máquina se ha encontrado un directorio oculto en la raíz llamado \texttt{.ingsec2425} con un archivo \texttt{xor.c}. Este archivo cuenta con una función para aplicar una operación \texttt{XOR} sobre una cadena en hexadecimal y una contraseña. Con esta información, se ha codificado la \textit{flag} en hexadecimal y se ha aplicado esta función sobre ella y la semilla, obteniendo el siguiente resultado:
+
+\lstset{style=bash}
+\begin{lstlisting}[language=bash, caption=XOR sobre la flag]
+    echo BlAEAAAGBVUHDlBTUgFNTQEEAwIAUwYHAQVVBlcDAFc= | base64 -d | xxd -p 
+    > 0650040000060555070e505352014d4d01040302005306070105550657030057 # flag en hex
+
+    /ingsec2425/xor lc7767 0650040000060555070e505352014d4d01040302005306070105550657030057
+    > 37333337363134363039666463627a7a37333261376430303066623161343134
+\end{lstlisting}
+
+Es importante destacar que para este proceso hemos usado el usuario \textit{admin} para modificar los permisos del directorio y el ejecutable y poder lanzarlo desde el usuario \textit{rover}.
+
+\subsection{Rotación}
+
+Primeramente se probó a hacer la rotación descubierta en las \textit{flags} de tipo 1 sobre el resultado de la operación XOR. Esto no resultó en una \textit{flag} correcta.
+
+Analizando más profundamente el resultado, la salida de la operación XOR cuenta con 64 caracteres, mientras que las flags de tipo 1 cuentan con 32 caracteres. Sabiendo que la cadena está codificada en hexadecimal, se transformó en \texttt{ASCII} para lograr una cadena con la longitud final esperada. Sobre la nueva cadena se volvió a aplicar la rotación, obteniendo el resultado final. Se ha usado el código de la parte anterior junto con el siguiente comando de linux para decodificar finalmente la flag:
+
+
+\lstset{style=bash}
+\begin{lstlisting}[language=bash, caption=Optención de la flag en claro]
+    echo "37333337363134363039666463627a7a37333261376430303066623161343134" | xxd -r -p
+    > 7337614609fdcbzz732a7d000fb1a414
+
+    python3 decode_flag.py 7337614609fdcbzz732a7d000fb1a414
+    > 6226503598ecbazz621f6c999ea0f303
+\end{lstlisting}
+
+\subsection{Pipeline de decodificación}
+
+Se incluye este apartado a modo de resumen del proceso seguido en la decodificación de las \textit{flags} tipo 2.
+
+\begin{enumerate}
+    \item Traducción de la \textit{flag} de base 64 a hexadecimal.
+    \item Operación XOR entre \textit{flag} y semilla.
+    \item Codificación en \texttt{ASCII} del resultado anterior.
+    \item Aplicación de la rotación descubierta para las \textit{flags} tipo 1.
+\end{enumerate}
 
 \section{Conclusión}
 \label{sec:conclusion}
