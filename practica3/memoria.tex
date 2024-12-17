@@ -141,7 +141,7 @@ fundamental identificar el comportamiento malicioso de cada uno de los
 softwares y comprender su funcionamiento. Además de extraer las \textit{flags}
 con el formato adecuado.
 
-Adicionalmente, es ipmortante tener en cuenta que contamos con información
+Adicionalmente, es importante tener en cuenta que contamos con información
 acerca del autor de estos programas. Es por esto que centraremos gran parte de
 nuestros esfuerzos en la identificación de cadenas donde un prefijo y un sufijo
 se concatenen a una \textbf{semilla}, siendo esta típicamente una palabra
@@ -222,16 +222,83 @@ entre ejecuciones, lo que ha levantado sospechas sobre la aleatoriedad de la
 función \texttt{rand}. Al buscar información en el manual y realizar una prueba
 en 3 máquinas distintas con diferentes sistemas operativos se ha confirmado que
 la secuencia que genera esta función es siempre la misma, haciendo de la
-generación de la flag un proceso determinista. Para cualquier ejecución, la
+generación de la \textit{flag} un proceso determinista. Para cualquier ejecución, la
 cadena de caracteres tendrá una longitud de 26, donde el prefijo y sufijo serán
 de longitud 10.
 
+Complementariamente, se han analizado los ficheros generados por el ejecutable.
+Esto ha permitido comprobar que, efectivamente, la flag escrita en el fichero
+\textit{processed\_files.txt}, la extraída durante la ejecución y la flag
+escrita al final de cada fichero es la misma. Se puede extraer la flag al final
+del fichero a través del siguiente comando:
+
+\begin{lstlisting}[caption=Obtención de la flag transformada concatenada al final del fichero]
+tail -c 26 file.processed # 881531cc331308c2ca534a15c4
+\end{lstlisting}
 
 \subsection{Descripción del Malware}
 \label{malware1}
 
+El malware se trata de un cifrador de ficheros, lo que encaja con la
+descripción de un \textit{ransomware}. Sin embargo, tiene ciertas
+particularidades destacables. Lo primero, crea una copia de cada fichero en el
+propio directorio, lo que no encaja del todo con el comportamiento típico de
+este tipo de malware. También, no trabaja sobre el archivo original, cifrando
+una copia. Esto se traduce en que, si una víctima ejecuta el binario en su
+máquina, no existirían daños reales sobre sus datos u archivos. No obstante, si
+se tiene en cuenta la naturaleza académica de este ejercicio, podemos ignorar
+estas particularidades y reconocer el potencial daño que puede tener un
+software de este tipo: la pérdida de acceso a ciertos ficheros en un directorio.
+
 \subsection{Descubrimiento de la flag}
 \label{flag1}
+
+Para el descubrimiento de la \textit{flag} ha sido necesario rotar la semilla
+descubierta. Dado que no cuenta con caracteres hexadecimales se ha empleado un
+\textit{script} de \texttt{Python} para rotarla en el alfabeto inglés buscando
+encontrar el patrón descrito en la introducción.
+
+\begin{lstlisting}[caption=Resultado de rotar la semilla en el alfabeto inglés]
+$ python rotate_seed.py 
+0	srrqnn
+1	tssroo
+2	uttspp
+3	vuutqq
+4	wvvurr
+5	xwwvss
+6	yxxwtt
+7	zyyxuu
+8	azzyvv
+9	baazww
+10	cbbaxx
+11	dccbyy
+12	eddczz
+13	feedaa
+14	gffebb
+15	hggfcc
+16	ihhgdd
+17	jiihee
+18	kjjiff
+19	lkkjgg
+20	mllkhh
+21	nmmlii
+22	onnmjj
+23	poonkk
+24	qppoll
+25	rqqpmm
+\end{lstlisting}
+
+De este resultado la única semilla que cumple la condición de ser una palabra
+seguida de dos letras es \textit{feedaa}. Adicionalmente es la única semilla
+que cuenta exclusivamente con caracteres hexadecimales. Lo que la convierte en
+la única candidata viable para ser la semilla. Adicionalmente a esta, se han
+probado las rotaciones de ejercicios pasados sin resultado exitoso.
+
+Finalmente, conociendo la longitud y hubicación de la semilla gracias al
+análisis estático se ha conseguido entregar existosamente la semilla:
+\texttt{6931FAC9DAFEEDAAB2B36C248B}. Esta semilla se ha generado replicando el
+código de la función \texttt{generate\_flag}, eliminando la ofuscación y
+empleando la semilla en claro.
 
 \section{Parte 2}
 \label{sec:type2}
