@@ -146,7 +146,8 @@ acerca del autor de estos programas. Es por esto que centraremos gran parte de
 nuestros esfuerzos en la identificación de cadenas donde un prefijo y un sufijo
 se concatenen a una \textbf{semilla}, siendo esta típicamente una palabra
 seguida de algún caracter repetido sobre la que se ha aplicado alguna clase de
-cifrado de desplazamiento en un alfabeto.
+cifrado de desplazamiento en un alfabeto, comúnmente el alfabeto de caracteres
+hexadecimales (``abcdef0123456789'').
 
 \section{Parte 1}
 \label{sec:type1}
@@ -182,7 +183,9 @@ Finalmente se concluyó que el código l3.c y el ejecutable \texttt{runDir} son 
     .png y .doc; creando una copia y aplicando una transformación descrita en
     la función \texttt{process\_buffer}. A estos archivos transformados les
     inserta la \texttt{flag} transformada al final.
-    \item Las funciones para transformar archivos o explorar directorios reciben una estructura donde se encuentra la \textit{flag} sin transformar y transformada.
+    \item Las funciones para transformar archivos o explorar directorios
+    reciben una estructura donde se encuentra la \textit{flag} sin transformar
+    y transformada.
 \end{itemize}
 
 Con todo lo anterior es fácil concluir que se trata de un programa que cifra u
@@ -195,7 +198,12 @@ transformada}.
 \subsection{Análisis dinámico}
 \label{subsec:analisis-dinámico-1}
 
-El análisis dinámico ha permitido la extracción de las \textit{flags} transformada y sin transformar. Para ello ha sido necesario sortear la llamada a la función \texttt{fork} para que el padre procese el directorio, al igual que el hijo, y permitir su análisis con la herramienta \texttt{gdb}. Esto se ha logrado mediante el siguiente código:
+El análisis dinámico ha permitido la extracción de las \textit{flags}
+transformada y sin transformar. Para ello ha sido necesario sortear la llamada
+a la función \texttt{fork} para que el padre procese el directorio, al igual
+que el hijo, y permitir su análisis con la herramienta \texttt{gdb}. Esto se ha
+logrado mediante el siguiente código:
+
 \newpage
 \begin{lstlisting}[caption=Instrucciones en gdb para esquivar la llamada fork]
 (gdb) break fork@plt
@@ -290,7 +298,7 @@ $ python rotate_seed.py
 
 De este resultado, la única semilla que cumple la condición de ser una palabra
 seguida de dos letras es \textit{feedaa}. Adicionalmente cuenta exclusivamente
-con caracteres hexadecimales. Lo que la convierte en
+con caracteres hexadecimales, lo que la convierte en
 la única candidata viable para ser la semilla. Adicionalmente, se han
 probado las rotaciones de ejercicios pasados sin resultado exitoso.
 
