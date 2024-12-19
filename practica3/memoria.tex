@@ -264,7 +264,7 @@ software de este tipo: la pérdida de acceso a ciertos ficheros en un directorio
 
 Para el descubrimiento de la \textit{flag} ha sido necesario rotar la semilla
 descubierta. Dado que no cuenta con caracteres hexadecimales se ha empleado un
-\textit{script} de \texttt{Python} para rotarla en el alfabeto inglés buscando
+\textit{script} de \texttt{Python} (ver \hyperref[anexo]{anexo}) para rotarla en el alfabeto inglés buscando
 encontrar el patrón descrito en la introducción.
 
 \begin{lstlisting}[caption=Resultado de rotar la semilla en el alfabeto inglés]
@@ -346,9 +346,21 @@ android.
 
 Se ha utilizado un móvil aislado de la red para la ejecución del software y la
 observación de su comportamiento. Se observa que se obtienen \textit{flags}
-distintas en cada ejecución. Sin embargo, no se perciben efectos nocivos a los
+distintas en cada ejecución (ver figura \ref{ejec}). Sin embargo, no se perciben efectos nocivos a los
 datos almancenados en el dispositivo. Destaca que se ha analizado el programa
 con un antivirus, sin levantar ninguna alarma.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.25\textwidth]{screenshot1.jpg}
+\includegraphics[width=0.25\textwidth]{screenshot2.jpg}
+\caption{Dos ejecuciones sobre un dispositivo android}
+\label{ejec}
+\end{figure}
+
+Destaca que, además de la instalación, el usuario debe darle permisos sobre el
+sistema de ficheros para que el software pueda ejecutarse. Es decir, se
+necesita interacción del usuario para la ejecución del malware.
 
 \subsection{Descripción del Malware}
 \label{malware1}
@@ -363,7 +375,7 @@ dispositivo android no tiene como consecuencia ningún efecto observable.
 Para el descubrimiento de la \textit{flag} ha sido necesario tanto las
 conclusiones extraídas del análisis estástico como el análisis del código
 fuente incluído el archivo \textit{FileProcessor.kt}. En este último aparece un
-comentariodonde se incluye la forma en la que se ha obtenido la semilla
+comentario donde se incluye la forma en la que se ha obtenido la semilla
 incluída en el binario, afirmando que se trata de un desplazamiento de 13
 posiciones sobre la palabra ``feedff''. No obstante, si se aplica este proceso
 a la inversa sobre la cadena que se usa como semilla se obtiene la palabra
@@ -403,6 +415,8 @@ malware así como la \textit{flag} en claro.
 \pagenumbering{gobble}
 \section*{Anexo}
 
+\phantomsection
+\label{anexo}
 \subsection*{Código para la rotación de la flag en el alfabeto inglés}
 \lstset{style=python}
 \lstinputlisting[language=Python]{scripts/rotate_seed.py}
