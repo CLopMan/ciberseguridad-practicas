@@ -12,6 +12,26 @@ We were given access to a remote machine with the objective of retrieving 9 flag
 ### **Technologies used**: 
 - ACL in linux, gdb, ghidra, bash, C, LaTEX.
 
+## [Practica2](https://github.com/CLopMan/ciberseguridad-practicas/tree/main/practica2)
+We were given access to a remote machine with a proxy which intercepted two classes of flags.
+
+### **Tasks:**
+- Analyzing the data to discover the message.
+- Describing why the proxy was able to work propperly.
+
+### Technologies used:
+- mitmproxy, `Python`, bash, LaTEX
+
+## [Practica3](https://github.com/CLopMan/ciberseguridad-practicas/tree/main/practica3)
+We were given two malwares and its source code in order to analyze them, checking they were the same program and retrieving a flag hidden within the software.
+
+### Tasks:
+- Analyzing two malwares and describe its behaivour.
+- Discover a flag in each malware.
+
+### Technologies used:
+- Ghidra, gdb, jadx, bash, `Python`, C, LaTEX.
+
 # Authors 
 - [CLopMan](https://github.com/CLopman)
 - [ManuGPR](https://github.com/ManuGPR)
